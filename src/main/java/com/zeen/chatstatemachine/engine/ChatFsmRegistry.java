@@ -42,7 +42,7 @@ public class ChatFsmRegistry implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof AbstractStateProcessor) {
-
+            //TODO这里解析注解调用init方法
         }
         return null;
     }
