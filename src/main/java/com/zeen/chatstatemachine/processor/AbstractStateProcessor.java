@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public abstract class AbstractStateProcessor<T, C> implements StateAction<T, C> , StateProcessor<T, C>{
 
     /**
-     * 这里给出默认的
+     * 这里给出默认
      * @param context
      * @return
      */
