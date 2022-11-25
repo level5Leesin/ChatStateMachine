@@ -1,5 +1,6 @@
 package com.zeen.chatstatemachine.engine;
 
+import com.zeen.chatstatemachine.annotation.Processor;
 import com.zeen.chatstatemachine.processor.AbstractStateProcessor;
 import com.zeen.chatstatemachine.processor.StateProcessor;
 import org.springframework.beans.BeansException;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,10 +43,19 @@ public class ChatFsmRegistry implements BeanPostProcessor {
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof AbstractStateProcessor) {
-            //TODO这里解析注解调用init方法
+        //如果加了处理器注解并且是抽象状态处理器
+        if (bean instanceof AbstractStateProcessor && bean.getClass().isAnnotationPresent(Processor.class)) {
+            //这里解析注解调用init方法
+            Processor annotation = bean.getClass().getAnnotation(Processor.class);
+            String[] state = Arrays.stream(annotation.state()).map(Enum::name).toArray(String[]::new);
+            String event = annotation.event().name();
+            //注解有可能没指定，给个默认的
+            String[] bizkeys = annotation.bizkey().length == 0 ? new String[]{":"} : annotation.bizkey();
+            String[] productLines = annotation.productLine().length == 0 ? new String[]{":"} : annotation.productLine();
+            String[] channels = annotation.channel().length == 0 ? new String[]{":"} : annotation.channel();
+            init(state, event, bizkeys, productLines, channels, stateProcessorMap, (AbstractStateProcessor) bean);
         }
-        return null;
+        return bean;
     }
 
     /**
@@ -59,6 +70,7 @@ public class ChatFsmRegistry implements BeanPostProcessor {
      * @param <E>
      */
     public <E extends AbstractStateProcessor> void init(String[] states, String event, String[] bizkeys, String[] productLines, String[] channels, Map<String, Map<String, Map<String, List<E>>>> map, E processor) {
+        //TODO 最好这个维度能精简下来，但是多一个会更清晰，emmm，其实每层的量都不会很大，启动时应该不会很慢
         for (String productLine : productLines) {
             for (String bizkey : bizkeys) {
                 for (String channel : channels) {
