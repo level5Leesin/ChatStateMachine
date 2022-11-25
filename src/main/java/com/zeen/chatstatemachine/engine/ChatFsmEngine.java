@@ -21,7 +21,7 @@ public interface ChatFsmEngine {
      * @param <C>
      * @return
      */
-    <T, C>ServiceResult<T, C> send(ChatEvent chatEvent);
+    <T, C>ServiceResult<T, C> send(ChatEvent chatEvent) throws Exception;
 
     /**
      * 这个没什么解释的，传event和ctx
@@ -29,6 +29,6 @@ public interface ChatFsmEngine {
      * @param <C>
      * @return
      */
-    <T, C>ServiceResult<T, C> send(ChatEvent chatEvent,  String patientState, String domain);
+    <T, C>ServiceResult<T, C> send(ChatEvent chatEvent,  String patientState, String domain) throws Exception;
 
 }

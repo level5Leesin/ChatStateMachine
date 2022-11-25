@@ -6,7 +6,7 @@ import com.zeen.chatstatemachine.context.Context;
 import org.springframework.stereotype.Component;
 
 /**
- * @description: 抽象状态处理器
+ * @description: 抽象状态处理器，或者说默认的。那业务怎么用呢，继承这个抽象的处理器就好了
  * @author: yjw
  * @create: 2022/11/24 上午12:57
  **/
@@ -42,7 +42,7 @@ public abstract class AbstractStateProcessor<T, C> implements StateAction<T, C> 
      * @param context
      * @return
      */
-    public abstract boolean need(Context<?> context);
+    public abstract boolean need(Context<C> context);
 //    public boolean need(Context<?> context) {
 //        //target
 //        Object target = null;

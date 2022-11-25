@@ -7,6 +7,7 @@ import com.zeen.chatstatemachine.processor.AbstractStateProcessor;
 import com.zeen.chatstatemachine.processor.StateProcessor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +17,15 @@ import java.util.List;
  * @author: yjw
  * @create: 2022/11/25 上午12:19
  **/
+
+@Component
 public class DefaultChatFsmEngine implements ChatFsmEngine{
 
     @Autowired
     ChatFsmRegistry chatFsmRegistry;
 
     @Override
-    public <T, C> ServiceResult<T, C> send(ChatEvent chatEvent) {
+    public <T, C> ServiceResult<T, C> send(ChatEvent chatEvent) throws Exception {
         //这里给个null是不对的，demo展示不想写太多了,实际上肯定是要从存储或者rpc获取的
         String patientState = null;
         String domain = null;
@@ -30,11 +33,13 @@ public class DefaultChatFsmEngine implements ChatFsmEngine{
     }
 
     @Override
-    public <T, C> ServiceResult<T, C> send(ChatEvent chatEvent, String patientState, String domain) {
+    public <T, C> ServiceResult<T, C> send(ChatEvent chatEvent, String patientState, String domain) throws Exception {
         Context context = getContext(chatEvent, patientState, domain);
         //这里得实际调用处理器才行
-
-        return null;
+        //接着上次断的地方写吧，这里拿到ctx，之前又写了获取处理器的方法，这里就简单了，拿到处理器调用执行就可以了
+        StateProcessor<T, ?> processor = getProcessor(context);
+        ServiceResult<T, C> serviceResult = processor.action(context);
+        return serviceResult;
     }
 
     private Context<?> getContext(ChatEvent chatEvent, String patientState, String domain) {

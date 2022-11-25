@@ -6,4 +6,8 @@ package com.zeen.chatstatemachine.event;
  * @create: 2022/11/23 下午11:39
  **/
 public class EndEvent implements ChatEvent {
+    @Override
+    public String getEventType() {
+        return "END";
+    }
 }

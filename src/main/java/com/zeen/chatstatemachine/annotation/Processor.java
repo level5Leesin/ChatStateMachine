@@ -1,5 +1,6 @@
 package com.zeen.chatstatemachine.annotation;
 
+import com.zeen.chatstatemachine.Enum.ChatEventEnum;
 import com.zeen.chatstatemachine.Enum.ChatStateEnum;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +28,7 @@ public @interface Processor {
     String[] productLine() default {};
 
     String[] channel() default {};
+
+    ChatEventEnum event();
 
 }

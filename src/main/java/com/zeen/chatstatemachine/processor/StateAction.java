@@ -30,7 +30,7 @@ public interface StateAction<T,C> {
      * 状态的执行动作，可以再开一个方法，但是感觉没必要，状态的迁移放在这里就好，ctx里是from，next是to
      * @return
      */
-    ServiceResult<T, C> action(Context<C> context, String to);
+    ServiceResult<T, C> action(Context<C> context, String nextState);
 
     /**
      * 后置处理流程-为业务准备，状态迁移后可能还要做一些事情
